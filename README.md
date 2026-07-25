@@ -1,5 +1,6 @@
 <p align="center">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/d/d4/Thales_Logo.svg" alt="Thales Group Logo" width="280"/>
+  <img src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/java/java.png" alt="Logo" width="80" hidden />
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Thales_Logo.svg/2560px-Thales_Logo.svg.png" alt="Thales Group Logo" width="300"/>
 </p>
 
 <h1 align="center">Simulateur Radar PPI & IHM Tactique (C2 / TopSky)</h1>
@@ -34,11 +35,11 @@ Ce projet est un simulateur en temps réel d'un **Radar de Surveillance Aérienn
 ### ✨ Fonctionnalités Clés
 * **Scope PPI Tactique** : Balayage circulaire 360° avec rémanence/traînée lumineuse, anneaux de portée, grilles d'azimut, boussole d'orientation et fond de carte vectoriel.
 * **Symbologie STANAG** : Représentation adaptée selon le type de menace :
-   * ✈️ **Avions** : Triangles tactiques orientés avec vecteur vitesse prédictif.
-   * 🛸 **Drones / Furtifs** : Losanges de traçage.
-   * 🚀 **Missiles** : Flèches d'interception haute vitesse.
-* **Statistiques & Courbes Temps Réel** : Suivi dynamique du SNR moyen, comparaison entre la probabilité de détection théorique et mesurée ($P_d = f(\text{Distance})$) et compteurs de fausses alarmes.
-* **Commandes Système** : Ajustement à la volée de la puissance émetteur, vitesse de rotation (RPM), gain d'antenne, seuil $P_{fa}$ et portée maximale.
+  * ✈️ **Avions** : Triangles tactiques orientés avec vecteur vitesse prédictif.
+  * 🛸 **Drones / Furtifs** : Losanges de traçage.
+  * 🚀 **Missiles** : Flèches d'interception haute vitesse.
+* **Statistiques & Courbes Temps Réel** : Suivi dynamique du SNR moyen, comparaison entre la probabilité de détection théorique et mesurée **(Pd = f(Distance))** et compteurs de fausses alarmes.
+* **Commandes Système** : Ajustement à la volée de la puissance émetteur, vitesse de rotation (RPM), gain d'antenne, seuil **Pfa** et portée maximale.
 
 ---
 
@@ -71,8 +72,8 @@ $$P_d = Q\left(Q^{-1}(P_{fa}) - \sqrt{2 \cdot SNR}\right)$$
 * **$Q$** : Fonction $Q$ gaussienne (queue de la distribution normale).
 * **$P_{fa}$** : Probabilité de fausse alarme ($10^{-6}$ par défaut, configurable).
 * **Bruit de mesure (Méthode Box-Muller)** :
-   * Erreur en distance : Bruit gaussien ($\sigma = 0.5\%$ de la portée).
-   * Erreur en azimut : Bruit gaussien ($\sigma = 0.3^\circ$).
+  * Erreur en distance : Bruit gaussien ($\sigma = 0.5\%$ de la portée).
+  * Erreur en azimut : Bruit gaussien ($\sigma = 0.3^\circ$).
 
 ---
 
@@ -91,8 +92,7 @@ $$P_d = Q\left(Q^{-1}(P_{fa}) - \sqrt{2 \cdot SNR}\right)$$
 
 ```text
 src/
-├── application/
-│   └── Main.java              # Point d'entrée JavaFX (Layout 3 colonnes)
+├── Main.java              # Point d'entrée JavaFX (Layout 3 colonnes)
 ├── controller/
 │   └── RadarController.java   # Boucle de simulation temps réel (AnimationTimer)
 ├── model/
@@ -104,5 +104,4 @@ src/
     ├── RadarDisplay.java      # Canvas du Scope PPI (Rendu vectoriel)
     ├── StatsPanel.java        # Panneau texte & Courbe Pd vs Distance
     └── ControlPanel.java      # Sliders et commandes de simulation
-
 
