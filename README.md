@@ -1,136 +1,108 @@
-# Simulateur Radar PPI 
+<p align="center">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/d/d4/Thales_Logo.svg" alt="Thales Group Logo" width="280"/>
+</p>
 
-**Mohamed Lemine Ahmed Jeddou | CY Tech | 2026**
+<h1 align="center">Simulateur Radar PPI & IHM Tactique (C2 / TopSky)</h1>
 
-Simulateur d'un radar de surveillance aérienne de type PPI (Plan Position Indicator),
-inspiré des radars Thales (GMA400, GM200). Implémente la physique réelle du radar.
+<p align="center">
+  <img src="https://img.shields.io/badge/Java-17%2B-orange?style=for-the-badge&logo=openjdk" alt="Java"/>
+  <img src="https://img.shields.io/badge/JavaFX-17-blue?style=for-the-badge&logo=javafx" alt="JavaFX"/>
+  <img src="https://img.shields.io/badge/Domain-Radar_%26_Defense-00E5FF?style=for-the-badge" alt="Domain"/>
+  <img src="https://img.shields.io/badge/CY_Tech-Ing%C3%A9nierie-003366?style=for-the-badge" alt="CY Tech"/>
+</p>
 
----
-
-## Physique implémentée
-
-### Équation radar fondamentale
-```
-SNR = (Pt × G² × λ² × σ) / ((4π)³ × R⁴ × k × T × B × F)
-```
-
-| Symbole | Signification             | Valeur par défaut |
-|---------|--------------------------|-------------------|
-| Pt      | Puissance crête           | 500 kW            |
-| G       | Gain antenne              | 33 dB             |
-| λ       | Longueur d'onde           | 10 cm (bande S)   |
-| σ       | Section efficace (RCS)    | 3 m² (avion)      |
-| R       | Distance cible-radar      | variable          |
-| k       | Constante Boltzmann       | 1.38×10⁻²³        |
-| T       | Température système       | 290 K             |
-| B       | Bande passante            | 1 MHz             |
-| F       | Facteur de bruit          | 5 dB              |
-
-### Probabilité de détection
-```
-Pd = Q(Q⁻¹(Pfa) - √(2×SNR))
-```
-
-- Q : fonction Q gaussienne (queue de la distribution normale)
-- Pfa : probabilité de fausse alarme (réglable, défaut 10⁻⁶)
-- Plus le SNR est élevé, plus Pd → 1
-
-### Bruit de mesure
-- Erreur de distance : bruit gaussien σ = 0.5% de la portée
-- Erreur d'azimut : bruit gaussien σ = 0.3°
-- Généré par la méthode Box-Muller
+<p align="center">
+  <b>Mohamed Lemine Ahmed Jeddou</b> — Élève-ingénieur à <i>CY Tech</i> (2026)
+</p>
 
 ---
 
-## Architecture MVC
+## 📸 Aperçu de l'Interface Tactique
 
-```
+> *Interface de contrôle et scope PPI inspirés des radars de surveillance aérienne Thales (GMA400, GM200) et des systèmes de contrôle aérien (TopSky / Command & Control).*
+
+<p align="center">
+  <img src="docs/screenshots/app_preview.png" alt="Aperçu du simulateur Radar PPI" width="100%"/>
+</p>
+
+---
+
+## 🎯 Présentation du Projet
+
+Ce projet est un simulateur en temps réel d'un **Radar de Surveillance Aérienne Type PPI (Plan Position Indicator)** développé en JavaFX. Il combine une **IHM tactique militaire moderne** et une **modélisation physique stricte** du traitement du signal radar (SNR, bruit de mesure, taux de fausse alarme, équations de détection).
+
+### ✨ Fonctionnalités Clés
+* **Scope PPI Tactique** : Balayage circulaire 360° avec rémanence/traînée lumineuse, anneaux de portée, grilles d'azimut, boussole d'orientation et fond de carte vectoriel.
+* **Symbologie STANAG** : Représentation adaptée selon le type de menace :
+   * ✈️ **Avions** : Triangles tactiques orientés avec vecteur vitesse prédictif.
+   * 🛸 **Drones / Furtifs** : Losanges de traçage.
+   * 🚀 **Missiles** : Flèches d'interception haute vitesse.
+* **Statistiques & Courbes Temps Réel** : Suivi dynamique du SNR moyen, comparaison entre la probabilité de détection théorique et mesurée ($P_d = f(\text{Distance})$) et compteurs de fausses alarmes.
+* **Commandes Système** : Ajustement à la volée de la puissance émetteur, vitesse de rotation (RPM), gain d'antenne, seuil $P_{fa}$ et portée maximale.
+
+---
+
+## 📐 Physique Implémentée
+
+### 1. Équation Radar Fondamentale (Calcul du SNR)
+
+Le rapport signal sur bruit est calculé pour chaque cible dans le faisceau d'antenne :
+
+$$SNR = \frac{P_t \cdot G^2 \cdot \lambda^2 \cdot \sigma}{(4\pi)^3 \cdot R^4 \cdot k \cdot T \cdot B \cdot F}$$
+
+| Symbole | Signification | Valeur par défaut |
+| :--- | :--- | :--- |
+| **$P_t$** | Puissance crête | $500\text{ kW}$ |
+| **$G$** | Gain antenne | $33\text{ dB}$ |
+| **$\lambda$** | Longueur d'onde | $10\text{ cm}$ (Bande S) |
+| **$\sigma$** | Section efficace (RCS / SER) | $3\text{ m}^2$ (Avion) |
+| **$R$** | Distance cible-radar | Variable ($\text{km}$) |
+| **$k$** | Constante de Boltzmann | $1.38 \times 10^{-23}\text{ J/K}$ |
+| **$T$** | Température du système | $290\text{ K}$ |
+| **$B$** | Bande passante | $1\text{ MHz}$ |
+| **$F$** | Facteur de bruit | $5\text{ dB}$ |
+
+---
+
+### 2. Probabilité de Détection ($P_d$) et Bruit
+
+$$P_d = Q\left(Q^{-1}(P_{fa}) - \sqrt{2 \cdot SNR}\right)$$
+
+* **$Q$** : Fonction $Q$ gaussienne (queue de la distribution normale).
+* **$P_{fa}$** : Probabilité de fausse alarme ($10^{-6}$ par défaut, configurable).
+* **Bruit de mesure (Méthode Box-Muller)** :
+   * Erreur en distance : Bruit gaussien ($\sigma = 0.5\%$ de la portée).
+   * Erreur en azimut : Bruit gaussien ($\sigma = 0.3^\circ$).
+
+---
+
+## 🎯 Matrice des Cibles Simulées
+
+| Type | RCS ($\text{m}^2$) | Vitesse typique |
+| :--- | :--- | :--- |
+| **Avion** | $3.0\text{ m}^2$ | $800 \text{ à } 1200\text{ km/h}$ |
+| **Drone** | $1.5\text{ m}^2$ | $180 \text{ à } 360\text{ km/h}$ |
+| **Missile** | $5.0\text{ m}^2$ | $2500 \text{ à } 3600\text{ km/h}$ |
+| **Oiseau / Parasite** | $0.3\text{ m}^2$ | $30 \text{ à } 100\text{ km/h}$ |
+
+---
+
+## 🏗️ Architecture Logicielle (MVC)
+
+```text
 src/
-├── Main.java                          # Point d'entrée JavaFX
+├── application/
+│   └── Main.java              # Point d'entrée JavaFX (Layout 3 colonnes)
+├── controller/
+│   └── RadarController.java   # Boucle de simulation temps réel (AnimationTimer)
 ├── model/
-│   ├── Radar.java                     # Physique radar (SNR, Pd, Pfa)
-│   ├── Target.java                    # Cibles (position, vitesse, RCS)
-│   ├── Detection.java                 # Résultat de détection
-│   └── RadarStats.java                # Statistiques temps réel
-├── view/
-│   ├── RadarDisplay.java              # Écran PPI (Canvas JavaFX)
-│   ├── StatsPanel.java                # Courbe Pd, statistiques
-│   └── ControlPanel.java             # Contrôles utilisateur
-└── controller/
-    └── RadarController.java           # Boucle simulation, détection
-```
-
----
-
-## Installation et compilation
-
-### Prérequis
-- Java 17+
-- JavaFX SDK 17+ (télécharger sur https://gluonhq.com/products/javafx/)
-
-### Compilation (ligne de commande)
-```bash
-# Depuis le dossier RadarSimulator/
-javac --module-path /chemin/vers/javafx/lib \
-      --add-modules javafx.controls,javafx.graphics \
-      -d out \
-      src/model/*.java src/view/*.java src/controller/*.java src/Main.java
-```
-
-### Exécution
-```bash
-java --module-path /chemin/vers/javafx/lib \
-     --add-modules javafx.controls,javafx.graphics \
-     -cp out Main
-```
-
-### Avec IntelliJ IDEA (recommandé)
-1. File → New Project → Java
-2. Copier tous les fichiers src/ dans le projet
-3. File → Project Structure → Libraries → ajouter JavaFX lib/
-4. Run → Edit Configurations → VM options :
-   `--module-path /chemin/javafx/lib --add-modules javafx.controls,javafx.graphics`
-5. Run Main
-
----
-
-## Fonctionnalités
-
-### Écran PPI
-- Affichage circulaire type radar réel (fond noir/vert)
-- Faisceau rotatif avec traîne lumineuse
-- Anneaux de distance (5 cercles concentriques)
-- Lignes d'azimut tous les 30°
-- Points de détection avec fade progressif
-- Fausses alarmes en rouge
-
-### Statistiques temps réel
-- Pd mesurée vs Pd théorique (courbe)
-- Pfa mesurée
-- SNR moyen en dB
-- Compteurs de détections / fausses alarmes
-- Liste des cibles actives
-
-### Contrôles
-- Vitesse de rotation (1–20 tr/min)
-- Puissance d'émission (100 kW – 2 MW)
-- Gain antenne (20–50 dB)
-- Portée maximale (50–500 km)
-- Probabilité de fausse alarme
-- Ajout/suppression de cibles (avion, drone, missile)
-- Mode debug (affichage vraies positions)
-
----
-
-## Types de cibles
-
-| Type    | RCS (m²) | Vitesse typique |
-|---------|----------|----------------|
-| Avion   | 3.0      | 800–1200 km/h  |
-| Drone   | 1.5      | 180–360 km/h   |
-| Missile | 5.0      | 2500–3600 km/h |
-| Oiseau  | 0.3      | 30–100 km/h    |
-
----
+│   ├── Radar.java             # Physique radar (SNR, Pd, Pfa, bruit)
+│   ├── Target.java            # Cibles (position, vitesse, RCS)
+│   ├── Detection.java         # Résultats de détection et fausses alarmes
+│   └── RadarStats.java        # Calculs statistiques et histogramme Pd
+└── view/
+    ├── RadarDisplay.java      # Canvas du Scope PPI (Rendu vectoriel)
+    ├── StatsPanel.java        # Panneau texte & Courbe Pd vs Distance
+    └── ControlPanel.java      # Sliders et commandes de simulation
 
 
