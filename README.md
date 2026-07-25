@@ -4,12 +4,6 @@
 
 <h1 align="center">Simulateur Radar PPI & IHM Tactique (C2 / TopSky)</h1>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Java-17%2B-orange?style=for-the-badge&logo=openjdk" alt="Java"/>
-  <img src="https://img.shields.io/badge/JavaFX-17-blue?style=for-the-badge&logo=javafx" alt="JavaFX"/>
-  <img src="https://img.shields.io/badge/Domain-Radar_%26_Defense-00E5FF?style=for-the-badge" alt="Domain"/>
-  <img src="https://img.shields.io/badge/CY_Tech-Ing%C3%A9nierie-003366?style=for-the-badge" alt="CY Tech"/>
-</p>
 
 <p align="center">
   <b>Mohamed Lemine Ahmed Jeddou</b> — Élève-ingénieur à <i>CY Tech</i> (2026)
