@@ -1,0 +1,18 @@
+# Fichiers de compilation
+/bin/
+/out/
+/target/
+*.class
+*.jar
+
+# Fichiers d'IDE (IntelliJ, Eclipse, VS Code)
+.idea/
+*.iml
+.settings/
+.classpath
+.project
+.vscode/
+
+# Divers
+.DS_Store
+*.log
