@@ -1,6 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/java/java.png" alt="Logo" width="80" hidden />
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Thales_Logo.svg/2560px-Thales_Logo.svg.png" alt="Thales Group Logo" width="300"/>
+  <img src="docs/screenshots/thales_logo.png" alt="Thales Group Logo" width="300"/>
 </p>
 
 <h1 align="center">Simulateur Radar PPI & IHM Tactique (C2 / TopSky)</h1>
